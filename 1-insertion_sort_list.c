@@ -1,58 +1,49 @@
 #include "sort.h"
 
-void swap(listint_t **head, listint_t *node1, listint_t *node2);
 /**
- * insertion_sort_list - sorts a doubly linked list with
- * the insertion sort algorithm
+ * insertion_sort_list - Sorts a list of integers
  *
- * @list: list to be sorted
+ * @list: The list to be sorted
  *
- * Return: void
+ * Return: The sorted list
  */
+
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *forw, *tmp;
 
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
-		return;
 
-	for (forw = (*list)->next; forw && forw->prev; forw = forw->next)
+	listint_t *current, *past;
+
+
+	if (!list || !*list)
 	{
-		for (; forw && forw->prev && forw->n < forw->prev->n;
-		     forw = forw->prev)
-		{
-			tmp = forw->prev;
-			swap(list, tmp, forw);
-			print_list(*list);
-			forw = forw->next;
-		}
+		return;
 	}
-}
+	current = *list;
+	current = current->next;
 
-/**
- * swap - swaps two nodes
- * @head: the head node
- * @node1: The first node
- * @node2: the second node
- *
- * Return: void
- */
-void swap(listint_t **head, listint_t *node1, listint_t *node2)
-{
-	listint_t *prev, *next;
+	while (current)
+	{
+		while (current->prev && (current->n) < (current->prev->n))
+		{
+			past = current->prev;
+			if (current->next)
+				(current->next)->prev = past;
 
-	prev = node1->prev;
-	next = node2->next;
-
-	if (prev != NULL)
-		prev->next = node2;
-	else
-		*head = node2;
-
-	node1->prev = node2;
-	node1->next = next;
-	node2->prev = prev;
-	node2->next = node1;
-	if (next)
-		next->prev = node1;
+			if (past->prev)
+			{
+				past->prev->next = current;
+			}
+			else
+			{
+				*list = current;
+			}
+			past->next = current->next;
+			current->prev = past->prev;
+			past->prev = current;
+			current->next = past;
+			print_list(*list);
+		}
+		current = current->next;
+	}
 }
